@@ -7,14 +7,21 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prettier:fix": "prettier --write ."
   },
   "dependencies": {
+    "antd": "^5.20.6",
+    "effector": "^23.2.2",
+    "effector-react": "^23.2.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/node": "^22.5.4",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
