@@ -28,10 +28,10 @@ export function FiltersForm(): JSX.Element {
       initialValues={{ dateRange: [dayjs('2021-01-01'), dayjs()] }}
       layout="vertical"
     >
-      <Form.Item label="Имя пользователя" name="name">
+      <Form.Item label="Имя пользователя:" name="name">
         <Input allowClear placeholder="Введите имя пользователя" />
       </Form.Item>
-      <Form.Item label="Тип пользователя" name="type">
+      <Form.Item label="Тип пользователя:" name="type">
         <Select
           allowClear
           showSearch
@@ -46,8 +46,8 @@ export function FiltersForm(): JSX.Element {
       <Form.Item
         label={
           <Flex gap={96}>
-            <span>Дата с</span>
-            <span>Дата по</span>
+            <span>Дата с:</span>
+            <span>Дата по:</span>
           </Flex>
         }
         name={'dateRange'}
