@@ -8,12 +8,14 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prettier:fix": "prettier --write ."
+    "prettier:fix": "prettier --write ./src"
   },
   "dependencies": {
     "antd": "^5.20.6",
+    "dayjs": "^1.11.13",
     "effector": "^23.2.2",
     "effector-react": "^23.2.1",
+    "localforage": "^1.10.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2"
