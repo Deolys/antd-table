@@ -1,6 +1,7 @@
 import { Layout } from 'antd';
 import type { JSX } from 'react';
 
+import { FiltersForm } from '@/components/filters-form';
 import { UsersTable } from '@/components/users-table';
 
 const { Header, Sider, Content } = Layout;
@@ -32,6 +33,7 @@ export function MainPage(): JSX.Element {
             boxShadow: '0 0 8px 8px rgba(59, 84, 108, 0.1)',
           }}
         >
+          <FiltersForm />
         </Sider>
       </Layout>
     </Layout>
