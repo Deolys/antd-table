@@ -1,17 +1,26 @@
-import { Layout } from 'antd';
+import { Button, Flex, Layout } from 'antd';
 import type { JSX } from 'react';
+import { useNavigate } from 'react-router-dom';
 
+import { DeleteUsersButton } from '@/components/buttons/delete-users-button';
 import { FiltersForm } from '@/components/filters-form';
 import { UsersTable } from '@/components/users-table';
 
 const { Header, Sider, Content } = Layout;
 
 export function MainPage(): JSX.Element {
+  const navigate = useNavigate();
+
   return (
     <Layout>
-      <Header />
+      <Header style={{ backgroundColor: '#52618d', position: 'sticky', top: 0, zIndex: 1 }}>
+        <Flex justify="space-between" align="center" style={{ height: '100%' }}>
+          <Button onClick={() => navigate('/user/new-id')}>Добавить пользователя</Button>
+          <DeleteUsersButton />
+        </Flex>
+      </Header>
       <Layout>
-        <Content style={{ marginInline: 70 }}>
+        <Content style={{ marginInline: 50 }}>
           <UsersTable />
         </Content>
         <Sider
@@ -25,12 +34,13 @@ export function MainPage(): JSX.Element {
             color: '#1890ff',
           }}
           style={{
-            height: '100vh',
+            height: 'calc(100vh - 64px)',
             position: 'sticky',
-            top: 0,
+            top: 64,
             right: 0,
+            display: 'block',
             backgroundColor: '#f7f9ff',
-            boxShadow: '0 0 8px 8px rgba(59, 84, 108, 0.1)',
+            boxShadow: '-10px 0 10px -4px rgba(59, 84, 108, 0.1)',
           }}
         >
           <FiltersForm />

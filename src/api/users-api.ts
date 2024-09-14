@@ -3,7 +3,7 @@ import localforage from 'localforage';
 
 import userTypesData from '@/config/data/UserTypes.json';
 import usersData from '@/config/data/Users.json';
-import type { User, UserType, UsersFilters } from '@/types/user';
+import type { CreateUser, User, UserType, UsersFilters } from '@/types/user';
 
 const USERS_KEY = 'users';
 const USER_TYPES_KEY = 'userTypes';
@@ -17,34 +17,28 @@ export const usersApi = {
     if (users?.length !== 0) {
       return;
     }
-    const usersWithTypes = usersData.map((user) => {
-      const userType = userTypesData.find((type) => type.id === user.type_id);
-      return { ...user, type: userType?.name };
-    });
-    await localforage.setItem(USERS_KEY, usersWithTypes);
+    await localforage.setItem(USERS_KEY, usersData);
     await localforage.setItem(USER_TYPES_KEY, userTypesData);
-  },
-
-  async getUserType(id: number): Promise<UserType['name'] | undefined> {
-    const userTypes = await this.getUserTypes();
-    const userType = userTypes.find((type) => type.id === id);
-
-    return userType?.name;
   },
 
   async getUserTypes(): Promise<UserType[]> {
     return (await localforage.getItem(USER_TYPES_KEY)) || [];
   },
 
-  async createUser(user: User): Promise<void> {
+  async getUserById(id?: number): Promise<User | null> {
+    const users = await this.getUsers();
+    const user = users.find((u) => u.id === id) || null;
+    return user;
+  },
+
+  async createUser(user: CreateUser): Promise<void> {
     const users = await this.getUsers();
     const newId = users.length > 0 ? Math.max(...users.map((u) => u.id)) + 1 : 1;
-    user.id = newId;
-    user.last_visit_date = dayjs()
+    const lastVisitDate = dayjs()
       .toISOString()
       .replace(/\.\d+Z$/, '');
 
-    users.push(user);
+    users.push({ ...user, id: newId, last_visit_date: lastVisitDate });
     await localforage.setItem(USERS_KEY, users);
   },
 
@@ -57,13 +51,10 @@ export const usersApi = {
     }
   },
 
-  async deleteUser(id: number): Promise<void> {
+  async deleteUsers(ids: number[]): Promise<void> {
     const users = await this.getUsers();
-    const userIndex = users.findIndex((u) => u.id === id);
-    if (userIndex !== -1) {
-      users.splice(userIndex, 1);
-      await localforage.setItem(USERS_KEY, users);
-    }
+    const updatedUsers = users.filter((u) => !ids.includes(u.id));
+    await localforage.setItem(USERS_KEY, updatedUsers);
   },
 
   async getFilteredUsers(filters: UsersFilters): Promise<User[]> {
