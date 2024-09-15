@@ -1,4 +1,4 @@
-import { createEffect, restore, sample } from 'effector';
+import { createEffect, createEvent, restore, sample } from 'effector';
 
 import { usersApi } from '@/api/users-api';
 import { CreateUser, UpdateUser } from '@/types/user';
@@ -17,6 +17,9 @@ export const updateUserFx = createEffect(async (userData: UpdateUser) => {
 });
 
 export const $user = restore(getUserFx, null);
+
+export const clearUserData = createEvent();
+$user.on(clearUserData, () => null);
 
 sample({
   clock: createUserFx.doneData,

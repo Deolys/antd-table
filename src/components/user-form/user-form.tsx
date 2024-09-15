@@ -3,7 +3,7 @@ import { useStoreMap, useUnit } from 'effector-react';
 import { type JSX, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { $user, createUserFx, getUserFx, updateUserFx } from '@/stores/user-store';
+import { $user, clearUserData, createUserFx, getUserFx, updateUserFx } from '@/stores/user-store';
 import { $userTypes } from '@/stores/users-store';
 import { CreateUser } from '@/types/user';
 
@@ -12,15 +12,20 @@ import { FormSubmitButton } from '../buttons/form-submit-button';
 export function UserForm(): JSX.Element {
   const { id } = useParams();
   const userId = Number(id);
-  const [user, loadingUser, userTypes] = useUnit([$user, getUserFx.pending, $userTypes]);
+  const [user, loadingUser, userTypes, clearUserForm] = useUnit([
+    $user,
+    getUserFx.pending,
+    $userTypes,
+    clearUserData,
+  ]);
   const [form] = Form.useForm();
 
   useEffect(() => {
     getUserFx(userId);
     return () => {
-      getUserFx();
+      clearUserForm();
     };
-  }, [userId]);
+  }, [userId, clearUserForm]);
 
   const userTypesOptions = useStoreMap({
     store: $userTypes,
