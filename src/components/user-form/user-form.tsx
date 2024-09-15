@@ -3,37 +3,38 @@ import { useStoreMap, useUnit } from 'effector-react';
 import { type JSX, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { $user, createUserFx, getUserFx } from '@/stores/user-store';
+import { $user, createUserFx, getUserFx, updateUserFx } from '@/stores/user-store';
 import { $userTypes } from '@/stores/users-store';
-
-interface FieldType {
-  name: string;
-  login: string;
-  password: string;
-  type_id: number;
-}
+import { CreateUser } from '@/types/user';
 
 export function UserForm(): JSX.Element {
-  const { id: userId } = useParams();
-  const [user, loadingUser] = useUnit([$user, getUserFx.pending]);
+  const { id } = useParams();
+  const userId = Number(id);
+  const [user, loadingUser, userTypes] = useUnit([$user, getUserFx.pending, $userTypes]);
 
   useEffect(() => {
-    getUserFx(Number(userId));
+    getUserFx(userId);
   }, [userId]);
 
-  const userTypes = useStoreMap({
+  const userTypesOptions = useStoreMap({
     store: $userTypes,
     keys: [],
     fn: (userTypes) =>
       userTypes.map((userType) => ({
         label: userType.name,
-        value: userType,
+        value: userType.id,
         display: userType.name,
       })),
   });
 
-  const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-    await createUserFx(values);
+  const onFinish: FormProps<CreateUser>['onFinish'] = async (values) => {
+    const selectedUserType = userTypes.find((userType) => userType.id === values.type_id);
+    const newValues = { ...values, type: selectedUserType?.name };
+    if (user) {
+      await updateUserFx({ ...newValues, id: userId });
+    } else {
+      await createUserFx(newValues);
+    }
   };
 
   return (
@@ -88,7 +89,7 @@ export function UserForm(): JSX.Element {
               filterOption={(input, option) =>
                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
               }
-              options={userTypes}
+              options={userTypesOptions}
             />
           </Form.Item>
           <Flex justify="end">

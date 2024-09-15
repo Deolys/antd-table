@@ -3,7 +3,7 @@ import localforage from 'localforage';
 
 import userTypesData from '@/config/data/UserTypes.json';
 import usersData from '@/config/data/Users.json';
-import type { CreateUser, User, UserType, UsersFilters } from '@/types/user';
+import type { CreateUser, UpdateUser, User, UserType, UsersFilters } from '@/types/user';
 
 const USERS_KEY = 'users';
 const USER_TYPES_KEY = 'userTypes';
@@ -17,7 +17,12 @@ export const usersApi = {
     if (users?.length !== 0) {
       return;
     }
-    await localforage.setItem(USERS_KEY, usersData);
+    const usersWithTypes = usersData.map((user) => {
+      const userType = userTypesData.find((type) => type.id === user.type_id);
+      return { ...user, type: userType?.name };
+    });
+
+    await localforage.setItem(USERS_KEY, usersWithTypes);
     await localforage.setItem(USER_TYPES_KEY, userTypesData);
   },
 
@@ -33,22 +38,37 @@ export const usersApi = {
 
   async createUser(user: CreateUser): Promise<void> {
     const users = await this.getUsers();
+    const duplicateLoginIndex = users.findIndex((u) => u.login === user.login);
+    if (duplicateLoginIndex !== -1) {
+      return Promise.reject({ message: 'Пользователь с таким логином уже существует' });
+    }
     const newId = users.length > 0 ? Math.max(...users.map((u) => u.id)) + 1 : 1;
     const lastVisitDate = dayjs()
       .toISOString()
       .replace(/\.\d+Z$/, '');
 
-    users.push({ ...user, id: newId, last_visit_date: lastVisitDate });
+    users.push({ id: newId, ...user, last_visit_date: lastVisitDate });
     await localforage.setItem(USERS_KEY, users);
   },
 
-  async updateUser(id: number, user: User): Promise<void> {
+  async updateUser(user: UpdateUser): Promise<User[] | Error> {
     const users = await this.getUsers();
-    const userIndex = users.findIndex((u) => u.id === id);
-    if (userIndex !== -1) {
-      users[userIndex] = user;
+    const userIndex = users.findIndex((u) => u.id === user.id);
+
+    if (userIndex === -1) {
+      return Promise.reject({ message: `Пользователь с id ${user.id} не найден` });
+    }
+    const duplicateLoginIndex = users.findIndex((u) => u.login === user.login && u.id !== user.id);
+    if (duplicateLoginIndex !== -1) {
+      return Promise.reject({ message: 'Пользователь с таким логином уже существует' });
+    }
+
+    if (users[userIndex]) {
+      const existingUser = users[userIndex];
+      users[userIndex] = Object.assign(existingUser, user);
       await localforage.setItem(USERS_KEY, users);
     }
+    return users;
   },
 
   async deleteUsers(ids: number[]): Promise<void> {

@@ -12,7 +12,9 @@ export type User = Omit<UserType, 'allow_edit'> & {
   last_visit_date: string;
 };
 
-export type CreateUser = Omit<User, 'id' | 'last_visit_date' | 'type'>;
+export type UpdateUser = Omit<User, 'last_visit_date' | 'type'>;
+
+export type CreateUser = Omit<UpdateUser, 'id'>;
 
 export interface UsersFilters {
   name?: string;

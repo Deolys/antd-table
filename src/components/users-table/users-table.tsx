@@ -1,20 +1,25 @@
 import { Button, Table } from 'antd';
 import { useUnit } from 'effector-react';
-import type { JSX, Key } from 'react';
+import { type JSX, type Key, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import editIcon from '@/assets/icons/edit-icon.svg';
 import { getFilteredUsersFx } from '@/stores/filters-store';
-import { $users, selectUserIds } from '@/stores/users-store';
+import { $selectedUserIds, $users, getUsersFx, selectUserIds } from '@/stores/users-store';
 import { User } from '@/types/user';
 
 export function UsersTable(): JSX.Element {
   const navigate = useNavigate();
-  const [users, usersPending, setSelectedUsers] = useUnit([
+  const [users, selectedUserIds, usersPending, setSelectedUsers] = useUnit([
     $users,
+    $selectedUserIds,
     getFilteredUsersFx.pending,
     selectUserIds,
   ]);
+
+  useEffect(() => {
+    getUsersFx();
+  }, []);
 
   const columns = [
     { title: 'ID', dataIndex: 'id', key: 'identifier', width: '2%' },
@@ -34,7 +39,6 @@ export function UsersTable(): JSX.Element {
       key: 'action',
       render: (record: User) => (
         <Button
-          type="link"
           icon={
             <img width={24} height={24} src={editIcon} title="Редактировать" alt="Редактирование" />
           }
@@ -49,6 +53,7 @@ export function UsersTable(): JSX.Element {
     onChange: (_: Key[], selectedRows: User[]) => {
       setSelectedUsers(selectedRows.map((r) => r.id));
     },
+    selectedRowKeys: selectedUserIds,
   };
 
   return (
@@ -57,7 +62,7 @@ export function UsersTable(): JSX.Element {
       loading={usersPending}
       dataSource={users}
       columns={columns}
-      rowKey={(record) => `${record.id}-${record.login}`}
+      rowKey={(record) => record.id}
       rowSelection={{
         type: 'checkbox',
         ...rowSelection,
