@@ -11,6 +11,7 @@ const { RangePicker } = DatePicker;
 
 export function FiltersForm(): JSX.Element {
   const [filtersLoading] = useUnit([getFilteredUsersFx.pending]);
+  const [form] = Form.useForm();
 
   const userTypes = useStoreMap({
     store: $userTypes,
@@ -24,6 +25,7 @@ export function FiltersForm(): JSX.Element {
 
   return (
     <Form
+      form={form}
       style={{ padding: 20 }}
       onFinish={getFilteredUsersFx}
       initialValues={{ dateRange: [dayjs(FILTER_START_DATE), dayjs()] }}
@@ -64,6 +66,9 @@ export function FiltersForm(): JSX.Element {
       </Form.Item>
       <Button type="primary" block loading={filtersLoading} htmlType="submit">
         Поиск
+      </Button>
+      <Button type="link" onClick={() => form.resetFields()}>
+        Сбросить фильтры
       </Button>
     </Form>
   );
