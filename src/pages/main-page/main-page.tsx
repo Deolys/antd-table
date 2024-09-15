@@ -14,8 +14,8 @@ export function MainPage(): JSX.Element {
 
   return (
     <Layout>
-      <Header style={{ backgroundColor: '#52618d', position: 'sticky', top: 0, zIndex: 1 }}>
-        <Flex justify="space-between" align="center" style={{ height: '100%' }}>
+      <Header style={{ position: 'sticky', top: 0, zIndex: 1 }}>
+        <Flex justify="end" gap={14} align="center" style={{ height: '100%' }}>
           <Button onClick={() => navigate(pageRoutes.NEW_USER_FORM)}>Добавить пользователя</Button>
           <DeleteUsersButton />
         </Flex>
@@ -40,7 +40,6 @@ export function MainPage(): JSX.Element {
             top: 64,
             right: 0,
             display: 'block',
-            backgroundColor: '#f7f9ff',
             boxShadow: '-10px 0 10px -4px rgba(59, 84, 108, 0.1)',
           }}
         >
