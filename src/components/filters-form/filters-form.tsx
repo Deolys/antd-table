@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { useStoreMap, useUnit } from 'effector-react';
 import type { JSX } from 'react';
 
+import { FILTER_START_DATE } from '@/constants/initial-filters';
 import { getFilteredUsersFx } from '@/stores/filters-store';
 import { $userTypes } from '@/stores/users-store';
 
@@ -25,7 +26,7 @@ export function FiltersForm(): JSX.Element {
     <Form
       style={{ padding: 20 }}
       onFinish={getFilteredUsersFx}
-      initialValues={{ dateRange: [dayjs('2021-01-01'), dayjs()] }}
+      initialValues={{ dateRange: [dayjs(FILTER_START_DATE), dayjs()] }}
       layout="vertical"
     >
       <Form.Item label="Имя пользователя:" name="name">

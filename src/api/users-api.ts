@@ -40,7 +40,7 @@ export const usersApi = {
     const users = await this.getUsers();
     const duplicateLoginIndex = users.findIndex((u) => u.login === user.login);
     if (duplicateLoginIndex !== -1) {
-      return Promise.reject({ message: 'Пользователь с таким логином уже существует' });
+      return Promise.reject({ message: 'Пользователь с указанным логином уже существует' });
     }
     const newId = users.length > 0 ? Math.max(...users.map((u) => u.id)) + 1 : 1;
     const lastVisitDate = dayjs()
@@ -60,7 +60,7 @@ export const usersApi = {
     }
     const duplicateLoginIndex = users.findIndex((u) => u.login === user.login && u.id !== user.id);
     if (duplicateLoginIndex !== -1) {
-      return Promise.reject({ message: 'Пользователь с таким логином уже существует' });
+      return Promise.reject({ message: 'Пользователь с указанным логином уже существует' });
     }
 
     if (users[userIndex]) {

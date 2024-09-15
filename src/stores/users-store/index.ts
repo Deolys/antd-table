@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { createEffect, createEvent, createStore, restore, sample } from 'effector';
 
 import { usersApi } from '@/api/users-api';
+import { FILTER_START_DATE } from '@/constants/initial-filters';
 
 import { getFilteredUsersFx } from '../filters-store';
 
@@ -45,7 +46,7 @@ sample({
 
 sample({
   clock: initUsersDataFx.done,
-  fn: () => ({ dateRange: [`${dayjs('2021-01-01')}`, `${dayjs()}`] }),
+  fn: () => ({ dateRange: [`${dayjs(FILTER_START_DATE)}`, `${dayjs()}`] }),
   target: getFilteredUsersFx,
 });
 

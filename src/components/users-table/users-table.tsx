@@ -4,6 +4,8 @@ import { type JSX, type Key, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import editIcon from '@/assets/icons/edit-icon.svg';
+import { pageRoutes } from '@/constants/page-routes';
+import { userTableHeaders } from '@/constants/users-table-headers';
 import { getFilteredUsersFx } from '@/stores/filters-store';
 import { $selectedUserIds, $users, getUsersFx, selectUserIds } from '@/stores/users-store';
 import { User } from '@/types/user';
@@ -22,17 +24,7 @@ export function UsersTable(): JSX.Element {
   }, []);
 
   const columns = [
-    { title: 'ID', dataIndex: 'id', key: 'identifier', width: '2%' },
-    { title: 'Логин', dataIndex: 'login', key: 'login', width: '18%' },
-    { title: 'Пароль', dataIndex: 'password', key: 'password', width: '18%' },
-    { title: 'Имя', dataIndex: 'name', key: 'name', width: '18%' },
-    { title: 'Тип пользователя', dataIndex: 'type', key: 'type', width: '18%' },
-    {
-      title: 'Время последнего посещения',
-      dataIndex: 'last_visit_date',
-      key: 'last_visit_date',
-      width: '18%',
-    },
+    ...userTableHeaders,
     {
       title: '',
       dataIndex: '',
@@ -42,7 +34,7 @@ export function UsersTable(): JSX.Element {
           icon={
             <img width={24} height={24} src={editIcon} title="Редактировать" alt="Редактирование" />
           }
-          onClick={() => navigate(`/user/${record.id}`)}
+          onClick={() => navigate(`${pageRoutes.USER_FORM}/${record.id}`)}
         />
       ),
       width: '4%',

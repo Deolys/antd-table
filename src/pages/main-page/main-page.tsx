@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { DeleteUsersButton } from '@/components/buttons/delete-users-button';
 import { FiltersForm } from '@/components/filters-form';
 import { UsersTable } from '@/components/users-table';
+import { pageRoutes } from '@/constants/page-routes';
 
 const { Header, Sider, Content } = Layout;
 
@@ -15,7 +16,7 @@ export function MainPage(): JSX.Element {
     <Layout>
       <Header style={{ backgroundColor: '#52618d', position: 'sticky', top: 0, zIndex: 1 }}>
         <Flex justify="space-between" align="center" style={{ height: '100%' }}>
-          <Button onClick={() => navigate('/user/new-id')}>Добавить пользователя</Button>
+          <Button onClick={() => navigate(pageRoutes.NEW_USER_FORM)}>Добавить пользователя</Button>
           <DeleteUsersButton />
         </Flex>
       </Header>
