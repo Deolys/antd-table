@@ -4,16 +4,8 @@ import { usersApi } from '@/api/users-api';
 import { CreateUser, UpdateUser } from '@/types/user';
 import { showErrorMessageFx, showSuccessMessageFx } from '@/utils/messages';
 
-import { $userTypes } from '../users-store';
-
 export const getUserFx = createEffect(async (id?: number) => {
-  const user = await usersApi.getUserById(id);
-  const userTypes = $userTypes.getState();
-  if (user) {
-    const userType = userTypes.find((type) => type.id === user.type_id);
-    return { ...user, type: userType?.name };
-  }
-  return null;
+  return await usersApi.getUserById(id);
 });
 
 export const createUserFx = createEffect(async (userData: CreateUser) => {

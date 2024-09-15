@@ -17,6 +17,9 @@ export function UserForm(): JSX.Element {
 
   useEffect(() => {
     getUserFx(userId);
+    return () => {
+      getUserFx();
+    };
   }, [userId]);
 
   const userTypesOptions = useStoreMap({
