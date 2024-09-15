@@ -1,6 +1,9 @@
+import dayjs from 'dayjs';
 import { createEffect, createEvent, createStore, restore, sample } from 'effector';
 
 import { usersApi } from '@/api/users-api';
+
+import { getFilteredUsersFx } from '../filters-store';
 
 export const getUsersFx = createEffect(usersApi.getUsers);
 
@@ -15,7 +18,7 @@ const initUsersDataFx = createEffect(async () => {
   getUserTypesFx();
   getUsersFx();
 });
-await initUsersDataFx();
+initUsersDataFx();
 
 export const selectUserIds = createEvent<number[]>();
 export const deleteUsersByIds = createEvent();
@@ -39,3 +42,11 @@ sample({
   fn: (users, ids) => users.filter(({ id }) => !ids.params.includes(id)),
   target: $users,
 });
+
+sample({
+  clock: initUsersDataFx.done,
+  fn: () => ({ dateRange: [`${dayjs('2021-01-01')}`, `${dayjs()}`] }),
+  target: getFilteredUsersFx,
+});
+
+$users.on(getFilteredUsersFx.doneData, (_, users) => users);

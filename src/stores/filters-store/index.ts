@@ -3,7 +3,7 @@ import { createEffect } from 'effector';
 import { usersApi } from '@/api/users-api';
 import { UsersFilters } from '@/types/user';
 
-import { $userTypes, $users } from '../users-store';
+import { $userTypes } from '../users-store';
 
 export const getFilteredUsersFx = createEffect(async (filters: UsersFilters) => {
   const users = await usersApi.getFilteredUsers(filters);
@@ -15,5 +15,3 @@ export const getFilteredUsersFx = createEffect(async (filters: UsersFilters) => 
 
   return usersWithTypes;
 });
-
-$users.on(getFilteredUsersFx.doneData, (_, users) => users);
