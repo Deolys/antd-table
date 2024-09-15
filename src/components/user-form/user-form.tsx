@@ -1,4 +1,4 @@
-import { Button, Flex, Form, FormProps, Input, Select, Typography } from 'antd';
+import { Flex, Form, FormProps, Input, Select, Typography } from 'antd';
 import { useStoreMap, useUnit } from 'effector-react';
 import { type JSX, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
@@ -7,10 +7,13 @@ import { $user, createUserFx, getUserFx, updateUserFx } from '@/stores/user-stor
 import { $userTypes } from '@/stores/users-store';
 import { CreateUser } from '@/types/user';
 
+import { FormSubmitButton } from '../buttons/form-submit-button';
+
 export function UserForm(): JSX.Element {
   const { id } = useParams();
   const userId = Number(id);
   const [user, loadingUser, userTypes] = useUnit([$user, getUserFx.pending, $userTypes]);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     getUserFx(userId);
@@ -41,6 +44,7 @@ export function UserForm(): JSX.Element {
     <>
       {!loadingUser && (
         <Form
+          form={form}
           style={{
             padding: 20,
             maxWidth: 500,
@@ -93,9 +97,7 @@ export function UserForm(): JSX.Element {
             />
           </Form.Item>
           <Flex justify="end">
-            <Button type="primary" htmlType="submit">
-              Отправить
-            </Button>
+            <FormSubmitButton form={form}>Отправить</FormSubmitButton>
           </Flex>
         </Form>
       )}
