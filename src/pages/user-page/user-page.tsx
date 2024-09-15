@@ -11,7 +11,7 @@ export function UserPage(): JSX.Element {
   const navigate = useNavigate();
   return (
     <Layout>
-      <Header>
+      <Header style={{ backgroundColor: '#52618d' }}>
         <Button onClick={() => navigate(pageRoutes.MAIN)}>На главную</Button>
       </Header>
       <Content style={{ marginInline: 50 }}>
