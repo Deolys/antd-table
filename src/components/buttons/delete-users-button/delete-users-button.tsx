@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Popconfirm } from 'antd';
 import { useUnit } from 'effector-react';
 import type { JSX } from 'react';
 
@@ -8,14 +8,18 @@ export function DeleteUsersButton(): JSX.Element {
   const [selectedUsers, deleteUsers] = useUnit([$selectedUserIds, deleteUsersByIds]);
 
   return (
-    <Button
-      danger
-      disabled={selectedUsers.length === 0}
-      onClick={() => {
-        deleteUsers();
-      }}
+    <Popconfirm
+      title="Удаление"
+      description="Вы уверены, что хотите удалить выбранных пользователей?"
+      onConfirm={() => deleteUsers()}
+      okText="Да"
+      cancelText="Нет"
+      okButtonProps={{ style: { width: 70 } }}
+      cancelButtonProps={{ style: { width: 70 } }}
     >
-      Удалить выбранных
-    </Button>
+      <Button danger disabled={selectedUsers.length === 0}>
+        Удалить выбранных
+      </Button>
+    </Popconfirm>
   );
 }
